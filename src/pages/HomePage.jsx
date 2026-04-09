@@ -13,8 +13,7 @@ function HomePage() {
         <Card.Body>
           <h2>Project Direction</h2>
           <p className="mb-0">
-            This frontend is intentionally scoped for course delivery while
-            aligning backend design with PDFMathTranslate-main internals.
+            The Front end of the PDF Translation Platform Prototype.
           </p>
         </Card.Body>
       </Card>

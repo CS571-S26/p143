@@ -2,7 +2,6 @@ import { Container } from 'react-bootstrap'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import PrimaryNavBar from './components/PrimaryNavBar'
 import HomePage from './pages/HomePage'
-import IntegrationPage from './pages/IntegrationPage'
 import RequirementsPage from './pages/RequirementsPage'
 
 function App() {
@@ -14,7 +13,6 @@ function App() {
           <Container>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/integration" element={<IntegrationPage />} />
               <Route path="/requirements" element={<RequirementsPage />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>

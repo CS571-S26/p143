@@ -3,19 +3,19 @@ import { Card, Col, Row } from 'react-bootstrap'
 const workflowSteps = [
   {
     title: '1. Input Validation',
-    text: 'Accept PDF/TXT under limit, validate provider and language against strict allow-lists.',
+    text: 'Check file type/size first, then make sure provider and language are in our allowed list.',
   },
   {
     title: '2. OCR + Extraction',
-    text: 'For scanned pages, route to OCR and extract text blocks suitable for translator chunking.',
+    text: 'If the PDF is scanned, run OCR and pull the text out in chunks.',
   },
   {
     title: '3. Translation Core',
-    text: 'Use selected API provider and preserve formulas/placeholders for structural fidelity.',
+    text: 'Use the selected API to translate while keeping formulas/placeholders intact.',
   },
   {
     title: '4. Output Build',
-    text: 'Produce bilingual side-by-side PDF and monolingual reading PDF for download.',
+    text: 'Create both output files: side-by-side bilingual PDF and translation-only PDF.',
   },
 ]
 

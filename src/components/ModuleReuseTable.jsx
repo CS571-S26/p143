@@ -4,32 +4,32 @@ const rows = [
   {
     module: 'pdf2zh/high_level.py',
     purpose: 'Main translation orchestration and output generation',
-    reuse: 'Backend service layer',
+    reuse: 'Use as the main backend flow',
   },
   {
     module: 'pdf2zh/converter.py',
     purpose: 'Text/formula parsing and PDF operator rewrite',
-    reuse: 'Core translation engine',
+    reuse: 'Use for the main translation logic',
   },
   {
     module: 'pdf2zh/doclayout.py',
     purpose: 'ONNX DocLayout detection wrapper',
-    reuse: 'Layout-analysis stage',
+    reuse: 'Use in the layout detection step',
   },
   {
     module: 'pdf2zh/translator.py',
     purpose: 'Provider adapters and prompt handling',
-    reuse: 'Restrict to OpenAI/DeepSeek/Gemini',
+    reuse: 'Keep only OpenAI/DeepSeek/Gemini',
   },
   {
     module: 'pdf2zh/cache.py',
     purpose: 'SQLite translation cache',
-    reuse: 'Optional performance layer',
+    reuse: 'Optional speed improvement',
   },
   {
     module: 'pdf2zh/converter_docx.py',
     purpose: 'DOC/DOCX to PDF conversion',
-    reuse: 'Optional pre-processing path',
+    reuse: 'Optional pre-processing',
   },
 ]
 

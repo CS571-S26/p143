@@ -8,8 +8,8 @@ function RequirementsPage() {
         <Card.Body>
           <h1 className="display-title">Course Requirement Status</h1>
           <p className="lead-copy">
-            This page tracks the minimum rubric items for deployment,
-            navigation, routing, and componentized React structure.
+            This page tracks the minimum checklist items for deployment,
+            navbar/routing, and component usage.
           </p>
         </Card.Body>
       </Card>
@@ -19,7 +19,7 @@ function RequirementsPage() {
           <h2>Routing Pages</h2>
           <p className="mb-0">
             Implemented pages: <code>Home</code>, <code>Integration Map</code>,
-            and <code>Requirements</code> via React Router.
+            and <code>Requirements</code> using React Router.
           </p>
         </Card.Body>
       </Card>

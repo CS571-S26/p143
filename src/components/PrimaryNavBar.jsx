@@ -14,9 +14,6 @@ function PrimaryNavBar() {
             <Nav.Link as={NavLink} to="/" end>
               Home
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/integration">
-              Integration Map
-            </Nav.Link>
             <Nav.Link as={NavLink} to="/requirements">
               Requirements
             </Nav.Link>
