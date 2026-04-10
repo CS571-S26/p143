@@ -23,7 +23,7 @@ function ScopePanel() {
       <Col md={5}>
         <Card className="panel h-100">
           <Card.Body>
-            <h2>Allowed Providers</h2>
+            <h2>Available Providers</h2>
             <ul className="chip-list">
               {providers.map((provider) => (
                 <li key={provider}>{provider}</li>
@@ -35,7 +35,7 @@ function ScopePanel() {
       <Col md={7}>
         <Card className="panel h-100">
           <Card.Body>
-            <h2>Supported Languages</h2>
+            <h2>Language Coverage</h2>
             <ul className="chip-list">
               {languages.map((language) => (
                 <li key={language}>{language}</li>

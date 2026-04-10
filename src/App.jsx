@@ -2,7 +2,7 @@ import { Container } from 'react-bootstrap'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import PrimaryNavBar from './components/PrimaryNavBar'
 import HomePage from './pages/HomePage'
-import RequirementsPage from './pages/RequirementsPage'
+import WorkspacePage from './pages/WorkspacePage'
 
 function App() {
   return (
@@ -13,7 +13,8 @@ function App() {
           <Container>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/requirements" element={<RequirementsPage />} />
+              <Route path="/workspace" element={<WorkspacePage />} />
+              <Route path="/requirements" element={<Navigate to="/workspace" replace />} />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Container>

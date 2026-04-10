@@ -7,12 +7,12 @@ function HeroSection() {
         <Card className="panel h-100">
           <Card.Body>
             <Badge bg="dark" className="mb-3">
-              Class Project
+              Live Tool
             </Badge>
             <h1 className="display-title">PDF Translation Platform Prototype</h1>
             <p className="lead-copy">
-              This is a project website. It shows the workflow, allowed
-              providers/languages, and a backend integration plan.
+              Upload a PDF or TXT file, choose a provider and language, then
+              get bilingual and monolingual outputs for study or review.
             </p>
           </Card.Body>
         </Card>
@@ -20,11 +20,12 @@ function HeroSection() {
       <Col lg={5}>
         <Card className="panel h-100 stat-panel">
           <Card.Body>
-            <h2>Current Scope</h2>
+            <h2>What You Can Do</h2>
             <ul className="quick-stats">
-              <li>3 providers: OpenAI, DeepSeek, Gemini</li>
-              <li>12 supported mainstream languages</li>
-              <li>Dual PDF + mono PDF output targets</li>
+              <li>Upload files up to 10 MB</li>
+              <li>Use OpenAI, DeepSeek, or Gemini</li>
+              <li>Select from mainstream languages</li>
+              <li>Download dual and mono PDFs</li>
             </ul>
           </Card.Body>
         </Card>

@@ -12,10 +12,10 @@ function PrimaryNavBar() {
         <Navbar.Collapse id="main-nav">
           <Nav className="ms-auto">
             <Nav.Link as={NavLink} to="/" end>
-              Home
+              Translate
             </Nav.Link>
-            <Nav.Link as={NavLink} to="/requirements">
-              Requirements
+            <Nav.Link as={NavLink} to="/workspace">
+              Workspace
             </Nav.Link>
           </Nav>
         </Navbar.Collapse>
