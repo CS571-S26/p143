@@ -7,7 +7,9 @@ function statusBadge(status) {
 }
 
 function formatAge(timestamp) {
+  if (!timestamp) return '-'
   const seconds = Math.floor((Date.now() - timestamp) / 1000)
+  if (Number.isNaN(seconds) || seconds < 0) return '-'
   if (seconds < 10) return 'just now'
   if (seconds < 60) return `${seconds}s ago`
   const minutes = Math.floor(seconds / 60)
@@ -32,6 +34,7 @@ function RecentJobsTable({ jobs }) {
                 <th>Provider</th>
                 <th>Outputs</th>
                 <th>Status</th>
+                <th>Progress</th>
                 <th>Updated</th>
               </tr>
             </thead>
@@ -51,6 +54,7 @@ function RecentJobsTable({ jobs }) {
                   <td>
                     <Badge bg={statusBadge(job.status)}>{job.status}</Badge>
                   </td>
+                  <td>{job.progress ?? 0}%</td>
                   <td>{formatAge(job.updatedAt)}</td>
                 </tr>
               ))}

@@ -49,6 +49,40 @@ Users can upload source files (`PDF`/`TXT`, up to 10 MB), extract text with OCR 
 - PDF generation module for bilingual and monolingual outputs
 - Basic error handling for unsupported files and API failures
 
+## Current Architecture
+
+- Frontend: React + React Bootstrap + React Router (`src/`)
+- Backend: FastAPI async job service (`backend/`)
+- Processing flow:
+  1. Upload PDF/TXT + translation settings
+  2. Text extraction from PDF/TXT with OCR fallback for scanned pages
+  3. Translation via OpenAI / DeepSeek / Gemini APIs
+  4. Asynchronous job tracking (`Queued`, `Running`, `Completed`, `Failed`)
+  5. Download generated `dual` PDF, `mono` PDF, source text, translated text, and glossary CSV (optional)
+
+## Run Locally
+
+Terminal 1 (backend):
+
+```bash
+cd backend
+python -m pip install -r requirements.txt
+python run.py
+```
+
+Terminal 2 (frontend):
+
+```bash
+npm install
+npm run dev
+```
+
+If needed, set frontend API base URL:
+
+```bash
+VITE_API_BASE_URL=http://localhost:8000
+```
+
 ## Notes
 
 - Users are responsible for their own API usage costs.
@@ -58,4 +92,3 @@ Users can upload source files (`PDF`/`TXT`, up to 10 MB), extract text with OCR 
 ## License
 
 To be added.
-

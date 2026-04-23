@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Alert, Button, Card, Form } from 'react-bootstrap'
 
-function DownloadList({ completedJobs }) {
+function DownloadList({ completedJobs, apiBaseUrl }) {
   const [query, setQuery] = useState('')
   const [notice, setNotice] = useState('')
 
@@ -12,8 +12,10 @@ function DownloadList({ completedJobs }) {
     )
   }, [completedJobs, query])
 
-  const handleDownload = (fileType, fileName) => {
-    setNotice(`${fileType} file prepared for ${fileName}.`)
+  const handleDownload = (job, artifact, fileType) => {
+    const url = `${apiBaseUrl}/api/jobs/${encodeURIComponent(job.id)}/download/${artifact}`
+    window.open(url, '_blank', 'noopener,noreferrer')
+    setNotice(`${fileType} download requested for ${job.fileName}.`)
   }
 
   return (
@@ -55,7 +57,7 @@ function DownloadList({ completedJobs }) {
                     <Button
                       size="sm"
                       variant="outline-dark"
-                      onClick={() => handleDownload('Bilingual PDF', job.fileName)}
+                      onClick={() => handleDownload(job, 'dual', 'Bilingual PDF')}
                     >
                       Dual PDF
                     </Button>
@@ -64,7 +66,7 @@ function DownloadList({ completedJobs }) {
                     <Button
                       size="sm"
                       variant="outline-dark"
-                      onClick={() => handleDownload('Monolingual PDF', job.fileName)}
+                      onClick={() => handleDownload(job, 'mono', 'Monolingual PDF')}
                     >
                       Mono PDF
                     </Button>
@@ -73,7 +75,7 @@ function DownloadList({ completedJobs }) {
                     <Button
                       size="sm"
                       variant="outline-dark"
-                      onClick={() => handleDownload('Glossary', job.fileName)}
+                      onClick={() => handleDownload(job, 'glossary', 'Glossary CSV')}
                     >
                       Glossary
                     </Button>

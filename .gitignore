@@ -26,3 +26,9 @@ dist-ssr
 # Local reference repos/folders (do not commit)
 PDFMathTranslate-main/
 PDFMathTranlate-main/
+
+# Python backend artifacts
+backend/storage/
+backend/.venv/
+__pycache__/
+*.pyc

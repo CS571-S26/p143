@@ -1,10 +1,12 @@
-import { useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Alert, Container } from 'react-bootstrap'
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
 import PrimaryNavBar from './components/PrimaryNavBar'
 import DownloadsPage from './pages/DownloadsPage'
 import HomePage from './pages/HomePage'
 import WorkspacePage from './pages/WorkspacePage'
+
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
 
 const initialSettings = {
   provider: 'OpenAI',
@@ -19,22 +21,10 @@ const initialSettings = {
 function App() {
   const [selectedFile, setSelectedFile] = useState(null)
   const [settings, setSettings] = useState(initialSettings)
-  const [jobs, setJobs] = useState([
-    {
-      id: 'seed-completed',
-      fileName: 'Classical_Logic.pdf',
-      provider: 'OpenAI',
-      sourceLanguage: 'English',
-      targetLanguage: 'Chinese (Traditional)',
-      includeBilingual: true,
-      includeMonolingual: true,
-      includeGlossary: true,
-      status: 'Completed',
-      updatedAt: Date.now() - 1000 * 60 * 8,
-    },
-  ])
+  const [jobs, setJobs] = useState([])
   const [activeFilter, setActiveFilter] = useState('All')
   const [notice, setNotice] = useState(null)
+  const hasShownBackendError = useRef(false)
 
   const completedJobs = useMemo(
     () => jobs.filter((job) => job.status === 'Completed'),
@@ -42,9 +32,35 @@ function App() {
   )
 
   const canStartTranslation =
-    Boolean(selectedFile) &&
+    Boolean(selectedFile?.rawFile) &&
     Boolean(settings.apiKey.trim()) &&
     (settings.includeBilingual || settings.includeMonolingual || settings.includeGlossary)
+
+  const fetchJobs = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/jobs`)
+      if (!response.ok) {
+        throw new Error(`Server returned ${response.status}`)
+      }
+      const payload = await response.json()
+      setJobs(payload.jobs || [])
+    } catch (error) {
+      if (!hasShownBackendError.current) {
+        hasShownBackendError.current = true
+        setNotice({
+          variant: 'warning',
+          text:
+            'Backend is unreachable. Start the API server with "python backend/run.py" in another terminal.',
+        })
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    fetchJobs()
+    const timerId = window.setInterval(fetchJobs, 2500)
+    return () => window.clearInterval(timerId)
+  }, [fetchJobs])
 
   const onFileSelect = (file) => {
     if (!/\.(pdf|txt)$/i.test(file.name)) {
@@ -62,6 +78,7 @@ function App() {
       sizeLabel: `${sizeMb.toFixed(2)} MB`,
       rawSize: file.size,
       type: file.type,
+      rawFile: file,
     })
     setNotice({ variant: 'info', text: `Selected ${file.name}` })
   }
@@ -85,22 +102,8 @@ function App() {
     }))
   }
 
-  const updateJob = (jobId, changes) => {
-    setJobs((previous) =>
-      previous.map((job) =>
-        job.id === jobId
-          ? {
-              ...job,
-              ...changes,
-              updatedAt: Date.now(),
-            }
-          : job,
-      ),
-    )
-  }
-
-  const onStartTranslation = () => {
-    if (!canStartTranslation || !selectedFile) {
+  const onStartTranslation = async () => {
+    if (!canStartTranslation || !selectedFile?.rawFile) {
       setNotice({
         variant: 'warning',
         text: 'Please add a file, API key, and at least one output option.',
@@ -108,29 +111,38 @@ function App() {
       return
     }
 
-    const jobId = `job-${Date.now()}`
-    const newJob = {
-      id: jobId,
-      fileName: selectedFile.name,
-      provider: settings.provider,
-      sourceLanguage: settings.sourceLanguage,
-      targetLanguage: settings.targetLanguage,
-      includeBilingual: settings.includeBilingual,
-      includeMonolingual: settings.includeMonolingual,
-      includeGlossary: settings.includeGlossary,
-      status: 'Queued',
-      updatedAt: Date.now(),
+    const formData = new FormData()
+    formData.append('file', selectedFile.rawFile)
+    formData.append('provider', settings.provider)
+    formData.append('sourceLanguage', settings.sourceLanguage)
+    formData.append('targetLanguage', settings.targetLanguage)
+    formData.append('apiKey', settings.apiKey)
+    formData.append('includeBilingual', String(settings.includeBilingual))
+    formData.append('includeMonolingual', String(settings.includeMonolingual))
+    formData.append('includeGlossary', String(settings.includeGlossary))
+
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/jobs`, {
+        method: 'POST',
+        body: formData,
+      })
+      const payload = await response.json()
+      if (!response.ok) {
+        throw new Error(payload.detail || 'Unable to start translation job.')
+      }
+      setNotice({
+        variant: 'success',
+        text: `Job queued for ${selectedFile.name}. Watch it in Workspace.`,
+      })
+      setSelectedFile(null)
+      setActiveFilter('All')
+      fetchJobs()
+    } catch (error) {
+      setNotice({
+        variant: 'danger',
+        text: error.message || 'Failed to create translation job.',
+      })
     }
-
-    setJobs((previous) => [newJob, ...previous])
-    setNotice({
-      variant: 'success',
-      text: `Job queued for ${selectedFile.name}. Check Workspace for status updates.`,
-    })
-    setActiveFilter('All')
-
-    window.setTimeout(() => updateJob(jobId, { status: 'Running' }), 700)
-    window.setTimeout(() => updateJob(jobId, { status: 'Completed' }), 2600)
   }
 
   return (
@@ -176,7 +188,12 @@ function App() {
                   />
                 }
               />
-              <Route path="/downloads" element={<DownloadsPage completedJobs={completedJobs} />} />
+              <Route
+                path="/downloads"
+                element={
+                  <DownloadsPage completedJobs={completedJobs} apiBaseUrl={API_BASE_URL} />
+                }
+              />
               <Route path="*" element={<Navigate to="/" replace />} />
             </Routes>
           </Container>
