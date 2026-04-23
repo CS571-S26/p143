@@ -17,6 +17,9 @@ function PrimaryNavBar() {
             <Nav.Link as={NavLink} to="/workspace">
               Workspace
             </Nav.Link>
+            <Nav.Link as={NavLink} to="/downloads">
+              Downloads
+            </Nav.Link>
           </Nav>
         </Navbar.Collapse>
       </Container>

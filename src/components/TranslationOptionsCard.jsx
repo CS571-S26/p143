@@ -1,21 +1,7 @@
 import { Card, Col, Form, Row } from 'react-bootstrap'
+import { LANGUAGES, PROVIDERS } from '../data/catalog'
 
-const languages = [
-  'English',
-  'Chinese (Simplified)',
-  'Chinese (Traditional)',
-  'Spanish',
-  'Hindi',
-  'Arabic',
-  'Portuguese',
-  'Russian',
-  'Japanese',
-  'French',
-  'German',
-  'Korean',
-]
-
-function TranslationOptionsCard() {
+function TranslationOptionsCard({ settings, onSettingChange }) {
   return (
     <Card className="panel h-100">
       <Card.Body>
@@ -24,18 +10,24 @@ function TranslationOptionsCard() {
           <Col md={12}>
             <Form.Group controlId="provider">
               <Form.Label>Provider</Form.Label>
-              <Form.Select defaultValue="OpenAI">
-                <option>OpenAI</option>
-                <option>DeepSeek</option>
-                <option>Gemini</option>
+              <Form.Select
+                value={settings.provider}
+                onChange={(event) => onSettingChange('provider', event.target.value)}
+              >
+                {PROVIDERS.map((provider) => (
+                  <option key={provider}>{provider}</option>
+                ))}
               </Form.Select>
             </Form.Group>
           </Col>
           <Col md={6}>
             <Form.Group controlId="langIn">
               <Form.Label>Source Language</Form.Label>
-              <Form.Select defaultValue="English">
-                {languages.map((lang) => (
+              <Form.Select
+                value={settings.sourceLanguage}
+                onChange={(event) => onSettingChange('sourceLanguage', event.target.value)}
+              >
+                {LANGUAGES.map((lang) => (
                   <option key={`in-${lang}`}>{lang}</option>
                 ))}
               </Form.Select>
@@ -44,11 +36,28 @@ function TranslationOptionsCard() {
           <Col md={6}>
             <Form.Group controlId="langOut">
               <Form.Label>Target Language</Form.Label>
-              <Form.Select defaultValue="Chinese (Simplified)">
-                {languages.map((lang) => (
+              <Form.Select
+                value={settings.targetLanguage}
+                onChange={(event) => onSettingChange('targetLanguage', event.target.value)}
+              >
+                {LANGUAGES.map((lang) => (
                   <option key={`out-${lang}`}>{lang}</option>
                 ))}
               </Form.Select>
+            </Form.Group>
+          </Col>
+          <Col md={12}>
+            <Form.Group controlId="apiKey">
+              <Form.Label>API Key</Form.Label>
+              <Form.Control
+                type="password"
+                placeholder="Paste your provider API key"
+                value={settings.apiKey}
+                onChange={(event) => onSettingChange('apiKey', event.target.value)}
+              />
+              <Form.Text className="muted-note">
+                Your key stays in this browser session only.
+              </Form.Text>
             </Form.Group>
           </Col>
         </Row>

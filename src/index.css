@@ -78,6 +78,13 @@ body {
   color: var(--muted);
 }
 
+.file-preview {
+  border: 1px dashed var(--line);
+  border-radius: 12px;
+  padding: 0.85rem;
+  background-color: #f9fcfd;
+}
+
 .stat-panel h2,
 .panel h2 {
   margin: 0 0 0.75rem;
@@ -144,6 +151,23 @@ body {
 
 .module-table th {
   background-color: #eef5f7;
+}
+
+.summary-value {
+  font-size: 2rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.download-item {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 0.8rem;
+  display: flex;
+  gap: 0.9rem;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 code {

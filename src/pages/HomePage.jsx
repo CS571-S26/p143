@@ -6,19 +6,37 @@ import ScopePanel from '../components/ScopePanel'
 import TranslationOptionsCard from '../components/TranslationOptionsCard'
 import WorkflowGrid from '../components/WorkflowGrid'
 
-function HomePage() {
+function HomePage({
+  selectedFile,
+  settings,
+  onFileSelect,
+  onFileClear,
+  onSettingChange,
+  onOutputToggle,
+  onStartTranslation,
+  canStartTranslation,
+}) {
   return (
     <div className="d-flex flex-column gap-4">
       <HeroSection />
       <Row className="g-4">
         <Col lg={4}>
-          <FileUploadCard />
+          <FileUploadCard
+            selectedFile={selectedFile}
+            onFileSelect={onFileSelect}
+            onFileClear={onFileClear}
+          />
         </Col>
         <Col lg={4}>
-          <TranslationOptionsCard />
+          <TranslationOptionsCard settings={settings} onSettingChange={onSettingChange} />
         </Col>
         <Col lg={4}>
-          <OutputOptionsCard />
+          <OutputOptionsCard
+            settings={settings}
+            onOutputToggle={onOutputToggle}
+            onStartTranslation={onStartTranslation}
+            canStart={canStartTranslation}
+          />
         </Col>
       </Row>
       <ScopePanel />
