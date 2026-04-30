@@ -105,6 +105,9 @@ then set:
 CORS_ALLOW_ORIGINS=https://cs571-s26.github.io
 ```
 
+Use the origin only for CORS. Do not include the app path or hash route
+(`/p143/#/`) in `CORS_ALLOW_ORIGINS`.
+
 After Render provides the backend URL, update the frontend deployment variable:
 
 ```text

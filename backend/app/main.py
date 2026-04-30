@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import os
 from pathlib import Path
+from urllib.parse import urlsplit
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -12,17 +13,30 @@ from .models import JobRequest
 from .services.translation import SUPPORTED_PROVIDERS
 
 ROOT = Path(__file__).resolve().parents[1]
+DEFAULT_CORS_ORIGINS = ["https://cs571-s26.github.io"]
 
 
 def _env_list(name: str, default: list[str]) -> list[str]:
     value = os.getenv(name, "").strip()
     if not value:
         return default
-    return [item.strip() for item in value.split(",") if item.strip()]
+    return [_normalize_origin(item) for item in value.split(",") if item.strip()]
+
+
+def _normalize_origin(value: str) -> str:
+    origin = value.strip().rstrip("/")
+    if origin == "*":
+        return origin
+    parsed = urlsplit(origin)
+    if parsed.scheme and parsed.netloc:
+        return f"{parsed.scheme}://{parsed.netloc}"
+    return origin
 
 
 STORAGE_ROOT = Path(os.getenv("STORAGE_ROOT", str(ROOT / "storage"))).expanduser()
-CORS_ALLOW_ORIGINS = _env_list("CORS_ALLOW_ORIGINS", ["*"])
+CORS_ALLOW_ORIGINS = sorted(
+    set(_env_list("CORS_ALLOW_ORIGINS", DEFAULT_CORS_ORIGINS) + DEFAULT_CORS_ORIGINS)
+)
 
 job_manager = JobManager(storage_root=STORAGE_ROOT)
 

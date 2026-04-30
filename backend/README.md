@@ -56,6 +56,7 @@ CORS_ALLOW_ORIGINS=https://cs571-s26.github.io
 Use the exact GitHub Pages origin that hosts the frontend. If your frontend is
 served from `https://<your-github-username>.github.io/p143/`, the origin is
 still `https://<your-github-username>.github.io`.
+Do not include the app path or hash route (`/p143/#/`) in `CORS_ALLOW_ORIGINS`.
 
 After Render creates the backend, update the frontend GitHub Pages build with:
 
