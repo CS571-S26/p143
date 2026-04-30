@@ -3,6 +3,7 @@ import { Badge, Card, Table } from 'react-bootstrap'
 function statusBadge(status) {
   if (status === 'Completed') return 'success'
   if (status === 'Running') return 'warning'
+  if (status === 'Failed') return 'danger'
   return 'secondary'
 }
 
@@ -35,6 +36,7 @@ function RecentJobsTable({ jobs }) {
                 <th>Outputs</th>
                 <th>Status</th>
                 <th>Progress</th>
+                <th>Message</th>
                 <th>Updated</th>
               </tr>
             </thead>
@@ -55,6 +57,7 @@ function RecentJobsTable({ jobs }) {
                     <Badge bg={statusBadge(job.status)}>{job.status}</Badge>
                   </td>
                   <td>{job.progress ?? 0}%</td>
+                  <td>{job.error || job.message || '-'}</td>
                   <td>{formatAge(job.updatedAt)}</td>
                 </tr>
               ))}

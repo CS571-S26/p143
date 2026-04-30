@@ -18,6 +18,14 @@ function DownloadList({ completedJobs, apiBaseUrl }) {
     setNotice(`${fileType} download requested for ${job.fileName}.`)
   }
 
+  const artifacts = [
+    { key: 'dual', label: 'Dual PDF', type: 'Bilingual PDF' },
+    { key: 'mono', label: 'Mono PDF', type: 'Monolingual PDF' },
+    { key: 'source', label: 'Source TXT', type: 'Source text' },
+    { key: 'translated', label: 'Translated TXT', type: 'Translated text' },
+    { key: 'glossary', label: 'Glossary CSV', type: 'Glossary CSV' },
+  ]
+
   return (
     <Card className="panel">
       <Card.Body>
@@ -53,33 +61,18 @@ function DownloadList({ completedJobs, apiBaseUrl }) {
                   </p>
                 </div>
                 <div className="d-flex flex-wrap gap-2">
-                  {job.includeBilingual && (
-                    <Button
-                      size="sm"
-                      variant="outline-dark"
-                      onClick={() => handleDownload(job, 'dual', 'Bilingual PDF')}
-                    >
-                      Dual PDF
-                    </Button>
-                  )}
-                  {job.includeMonolingual && (
-                    <Button
-                      size="sm"
-                      variant="outline-dark"
-                      onClick={() => handleDownload(job, 'mono', 'Monolingual PDF')}
-                    >
-                      Mono PDF
-                    </Button>
-                  )}
-                  {job.includeGlossary && (
-                    <Button
-                      size="sm"
-                      variant="outline-dark"
-                      onClick={() => handleDownload(job, 'glossary', 'Glossary CSV')}
-                    >
-                      Glossary
-                    </Button>
-                  )}
+                  {artifacts
+                    .filter((artifact) => job.downloads?.[artifact.key])
+                    .map((artifact) => (
+                      <Button
+                        key={artifact.key}
+                        size="sm"
+                        variant="outline-dark"
+                        onClick={() => handleDownload(job, artifact.key, artifact.type)}
+                      >
+                        {artifact.label}
+                      </Button>
+                    ))}
                 </div>
               </div>
             ))}

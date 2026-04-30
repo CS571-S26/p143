@@ -1,5 +1,5 @@
 import { Card, Col, Form, Row } from 'react-bootstrap'
-import { LANGUAGES, PROVIDERS } from '../data/catalog'
+import { DEFAULT_MODELS, LANGUAGES, PROVIDERS } from '../data/catalog'
 
 function TranslationOptionsCard({ settings, onSettingChange }) {
   return (
@@ -57,6 +57,19 @@ function TranslationOptionsCard({ settings, onSettingChange }) {
               />
               <Form.Text className="muted-note">
                 Your key stays in this browser session only.
+              </Form.Text>
+            </Form.Group>
+          </Col>
+          <Col md={12}>
+            <Form.Group controlId="model">
+              <Form.Label>Model</Form.Label>
+              <Form.Control
+                placeholder={`Default: ${DEFAULT_MODELS[settings.provider]}`}
+                value={settings.model}
+                onChange={(event) => onSettingChange('model', event.target.value)}
+              />
+              <Form.Text className="muted-note">
+                Leave blank to use the provider default.
               </Form.Text>
             </Form.Group>
           </Col>

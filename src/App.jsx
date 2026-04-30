@@ -13,6 +13,7 @@ const initialSettings = {
   sourceLanguage: 'English',
   targetLanguage: 'Chinese (Simplified)',
   apiKey: '',
+  model: '',
   includeBilingual: true,
   includeMonolingual: true,
   includeGlossary: false,
@@ -44,7 +45,7 @@ function App() {
       }
       const payload = await response.json()
       setJobs(payload.jobs || [])
-    } catch (error) {
+    } catch {
       if (!hasShownBackendError.current) {
         hasShownBackendError.current = true
         setNotice({
@@ -117,6 +118,7 @@ function App() {
     formData.append('sourceLanguage', settings.sourceLanguage)
     formData.append('targetLanguage', settings.targetLanguage)
     formData.append('apiKey', settings.apiKey)
+    formData.append('model', settings.model)
     formData.append('includeBilingual', String(settings.includeBilingual))
     formData.append('includeMonolingual', String(settings.includeMonolingual))
     formData.append('includeGlossary', String(settings.includeGlossary))

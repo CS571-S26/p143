@@ -1,6 +1,6 @@
 import { Button, ButtonGroup, Card } from 'react-bootstrap'
 
-const FILTERS = ['All', 'Queued', 'Running', 'Completed']
+const FILTERS = ['All', 'Queued', 'Running', 'Completed', 'Failed']
 
 function JobFilterBar({ activeFilter, onFilterChange }) {
   return (

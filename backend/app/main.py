@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
@@ -11,15 +12,25 @@ from .models import JobRequest
 from .services.translation import SUPPORTED_PROVIDERS
 
 ROOT = Path(__file__).resolve().parents[1]
-STORAGE_ROOT = ROOT / "storage"
+
+
+def _env_list(name: str, default: list[str]) -> list[str]:
+    value = os.getenv(name, "").strip()
+    if not value:
+        return default
+    return [item.strip() for item in value.split(",") if item.strip()]
+
+
+STORAGE_ROOT = Path(os.getenv("STORAGE_ROOT", str(ROOT / "storage"))).expanduser()
+CORS_ALLOW_ORIGINS = _env_list("CORS_ALLOW_ORIGINS", ["*"])
 
 job_manager = JobManager(storage_root=STORAGE_ROOT)
 
 app = FastAPI(title="AI Translation Backend", version="0.1.0")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
+    allow_origins=CORS_ALLOW_ORIGINS,
+    allow_credentials="*" not in CORS_ALLOW_ORIGINS,
     allow_methods=["*"],
     allow_headers=["*"],
 )

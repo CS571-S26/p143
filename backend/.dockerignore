@@ -1,0 +1,8 @@
+__pycache__/
+*.pyc
+*.pyo
+*.log
+.venv/
+storage/
+backend-live.log
+backend-live.err.log

@@ -1,0 +1,21 @@
+services:
+  - type: web
+    name: ai-translation-backend
+    runtime: docker
+    rootDir: backend
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: starter
+    region: oregon
+    autoDeployTrigger: commit
+    healthCheckPath: /api/health
+    maxShutdownDelaySeconds: 300
+    disk:
+      name: ai-translation-storage
+      mountPath: /data
+      sizeGB: 10
+    envVars:
+      - key: STORAGE_ROOT
+        value: /data/storage
+      - key: CORS_ALLOW_ORIGINS
+        sync: false

@@ -25,6 +25,46 @@ python run.py
 
 Backend URL: `http://localhost:8000`
 
+Optional local environment variables:
+
+```powershell
+$env:STORAGE_ROOT="C:\temp\ai-translation-storage"
+$env:CORS_ALLOW_ORIGINS="http://localhost:5173,http://127.0.0.1:5173"
+python run.py
+```
+
+## Deploy To Render
+
+This backend is prepared for Render as a Docker web service through the root
+`render.yaml` file.
+
+Render service settings:
+
+- Runtime: `docker`
+- Root directory: `backend`
+- Dockerfile: `./Dockerfile`
+- Health check path: `/api/health`
+- Persistent disk mount path: `/data`
+- Storage path: `/data/storage`
+
+Required Render environment variable:
+
+```text
+CORS_ALLOW_ORIGINS=https://<your-github-username>.github.io
+```
+
+Use the exact GitHub Pages origin that hosts the frontend. If your frontend is
+served from `https://<your-github-username>.github.io/p143/`, the origin is
+still `https://<your-github-username>.github.io`.
+
+After Render creates the backend, update the frontend GitHub Pages build with:
+
+```text
+VITE_API_BASE_URL=https://<your-render-service>.onrender.com
+```
+
+Then rebuild and redeploy the frontend.
+
 ## API Endpoints
 
 - `GET /api/health`

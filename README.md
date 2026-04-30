@@ -83,6 +83,29 @@ If needed, set frontend API base URL:
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
+## Backend Deployment
+
+The backend is prepared for Render deployment with:
+
+- `render.yaml` at the repo root
+- `backend/Dockerfile`
+- persistent storage via `STORAGE_ROOT=/data/storage`
+- CORS control via `CORS_ALLOW_ORIGINS`
+- Linux CJK fonts in the Docker image for Chinese PDF rendering
+
+On Render, create the backend from the Blueprint or Docker web service config,
+then set:
+
+```text
+CORS_ALLOW_ORIGINS=https://<your-github-username>.github.io
+```
+
+After Render provides the backend URL, update the frontend deployment variable:
+
+```text
+VITE_API_BASE_URL=https://<your-render-service>.onrender.com
+```
+
 ## Notes
 
 - Users are responsible for their own API usage costs.

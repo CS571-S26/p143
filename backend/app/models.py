@@ -58,6 +58,7 @@ class JobRecord:
             "id": self.id,
             "fileName": self.file_name,
             "provider": self.request.provider,
+            "model": self.request.model,
             "sourceLanguage": self.request.source_language,
             "targetLanguage": self.request.target_language,
             "includeBilingual": self.request.include_bilingual,
