@@ -84,7 +84,10 @@ https://cs571-s26.github.io/p143/#/
 - `GET /api/meta`
 - `GET /api/jobs`
 - `GET /api/jobs/{job_id}`
+- `PATCH /api/jobs/{job_id}` (edit display file name/language metadata)
+- `DELETE /api/jobs/{job_id}` (remove a completed/failed job and its files)
 - `POST /api/jobs` (multipart form)
 - `GET /api/jobs/{job_id}/download/{artifact}`
+- `DELETE /api/jobs/{job_id}/artifacts/{artifact}` (remove one generated output)
 
 `artifact` can be: `mono`, `dual`, `source`, `translated`, `glossary`.

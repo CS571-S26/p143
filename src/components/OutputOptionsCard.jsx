@@ -30,7 +30,7 @@ function OutputOptionsCard({ settings, onOutputToggle, onStartTranslation, canSt
             onChange={() => onOutputToggle('includeGlossary')}
             className="mb-3"
           />
-          <Button variant="success" onClick={onStartTranslation} disabled={!canStart}>
+          <Button type="button" variant="success" onClick={onStartTranslation} disabled={!canStart}>
             Start Translation
           </Button>
           {!canStart && (

@@ -4,6 +4,7 @@ from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime, timezone
 import json
 from pathlib import Path
+import shutil
 import threading
 import uuid
 
@@ -29,6 +30,75 @@ class JobManager:
     def get_job(self, job_id: str) -> JobRecord | None:
         with self._lock:
             return self._jobs.get(job_id)
+
+    def update_job_metadata(
+        self,
+        job_id: str,
+        *,
+        file_name: str | None = None,
+        source_language: str | None = None,
+        target_language: str | None = None,
+    ) -> JobRecord | None:
+        with self._lock:
+            job = self._jobs.get(job_id)
+            if not job:
+                return None
+            if job.status in {JobStatus.QUEUED, JobStatus.RUNNING}:
+                raise RuntimeError("Running or queued jobs cannot be edited.")
+            if file_name is not None:
+                job.file_name = Path(file_name).name
+            if source_language is not None:
+                job.request.source_language = source_language
+            if target_language is not None:
+                job.request.target_language = target_language
+            job.message = "Job details updated."
+            job.touch()
+            self._save_job(job)
+            return job
+
+    def delete_job(self, job_id: str) -> bool:
+        with self._lock:
+            job = self._jobs.get(job_id)
+            if not job:
+                return False
+            if job.status in {JobStatus.QUEUED, JobStatus.RUNNING}:
+                raise RuntimeError("Running or queued jobs cannot be deleted.")
+            job_dir = job.input_path.parent.resolve()
+            storage_root = self.storage_root.resolve()
+            if storage_root != job_dir and storage_root not in job_dir.parents:
+                raise RuntimeError("Job storage path is outside the configured storage root.")
+            self._jobs.pop(job_id, None)
+            shutil.rmtree(job_dir, ignore_errors=True)
+            return True
+
+    def delete_artifact(self, job_id: str, artifact: str) -> JobRecord | None:
+        output_attrs = {
+            "mono": "mono_pdf",
+            "dual": "dual_pdf",
+            "source": "source_txt",
+            "translated": "translated_txt",
+            "glossary": "glossary_csv",
+        }
+        attr_name = output_attrs.get(artifact)
+        if not attr_name:
+            raise ValueError("Unsupported artifact.")
+
+        with self._lock:
+            job = self._jobs.get(job_id)
+            if not job:
+                return None
+            path = getattr(job.outputs, attr_name)
+            if path and path.exists():
+                artifact_path = path.resolve()
+                job_dir = job.input_path.parent.resolve()
+                if job_dir != artifact_path.parent and job_dir not in artifact_path.parents:
+                    raise RuntimeError("Artifact path is outside the job storage folder.")
+                path.unlink()
+            setattr(job.outputs, attr_name, None)
+            job.message = f"Removed {artifact} output."
+            job.touch()
+            self._save_job(job)
+            return job
 
     def create_job(self, file_name: str, file_bytes: bytes, request: JobRequest) -> JobRecord:
         job_id = uuid.uuid4().hex[:12]

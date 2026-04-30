@@ -1,7 +1,7 @@
 import { Card } from 'react-bootstrap'
 import DownloadList from '../components/DownloadList'
 
-function DownloadsPage({ completedJobs, apiBaseUrl }) {
+function DownloadsPage({ completedJobs, apiBaseUrl, onArtifactDelete, onJobDelete }) {
   return (
     <div className="d-flex flex-column gap-4">
       <Card className="panel">
@@ -13,7 +13,12 @@ function DownloadsPage({ completedJobs, apiBaseUrl }) {
           </p>
         </Card.Body>
       </Card>
-      <DownloadList completedJobs={completedJobs} apiBaseUrl={apiBaseUrl} />
+      <DownloadList
+        completedJobs={completedJobs}
+        apiBaseUrl={apiBaseUrl}
+        onArtifactDelete={onArtifactDelete}
+        onJobDelete={onJobDelete}
+      />
     </div>
   )
 }

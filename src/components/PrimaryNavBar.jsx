@@ -8,7 +8,7 @@ function PrimaryNavBar() {
         <Navbar.Brand as={NavLink} to="/" className="brand-mark">
           AI Translation Pilot
         </Navbar.Brand>
-        <Navbar.Toggle aria-controls="main-nav" />
+        <Navbar.Toggle aria-controls="main-nav" aria-label="Toggle navigation menu" />
         <Navbar.Collapse id="main-nav">
           <Nav className="ms-auto">
             <Nav.Link as={NavLink} to="/" end>

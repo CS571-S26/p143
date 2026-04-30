@@ -3,7 +3,7 @@ import JobFilterBar from '../components/JobFilterBar'
 import JobSummaryCards from '../components/JobSummaryCards'
 import RecentJobsTable from '../components/RecentJobsTable'
 
-function WorkspacePage({ jobs, activeFilter, onFilterChange }) {
+function WorkspacePage({ jobs, activeFilter, onFilterChange, onJobUpdate, onJobDelete }) {
   const visibleJobs =
     activeFilter === 'All' ? jobs : jobs.filter((job) => job.status === activeFilter)
 
@@ -19,7 +19,11 @@ function WorkspacePage({ jobs, activeFilter, onFilterChange }) {
       </Card>
       <JobSummaryCards jobs={jobs} />
       <JobFilterBar activeFilter={activeFilter} onFilterChange={onFilterChange} />
-      <RecentJobsTable jobs={visibleJobs} />
+      <RecentJobsTable
+        jobs={visibleJobs}
+        onJobUpdate={onJobUpdate}
+        onJobDelete={onJobDelete}
+      />
     </div>
   )
 }

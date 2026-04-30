@@ -7,6 +7,7 @@ from urllib.parse import urlsplit
 from fastapi import FastAPI, File, Form, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
+from pydantic import BaseModel
 
 from .job_manager import JobManager
 from .models import JobRequest
@@ -54,6 +55,12 @@ def _parse_bool(value: str) -> bool:
     return value.strip().lower() in {"1", "true", "yes", "on"}
 
 
+class JobUpdate(BaseModel):
+    fileName: str | None = None
+    sourceLanguage: str | None = None
+    targetLanguage: str | None = None
+
+
 @app.get("/api/health")
 def health() -> dict:
     return {"ok": True}
@@ -79,6 +86,48 @@ def get_job(job_id: str) -> dict:
     if not job:
         raise HTTPException(status_code=404, detail="Job not found.")
     return {"job": job.to_dict()}
+
+
+@app.patch("/api/jobs/{job_id}")
+def update_job(job_id: str, update: JobUpdate) -> dict:
+    file_name = update.fileName.strip() if update.fileName is not None else None
+    source_language = (
+        update.sourceLanguage.strip() if update.sourceLanguage is not None else None
+    )
+    target_language = (
+        update.targetLanguage.strip() if update.targetLanguage is not None else None
+    )
+
+    if file_name is not None and not file_name:
+        raise HTTPException(status_code=400, detail="File name cannot be empty.")
+    if source_language is not None and not source_language:
+        raise HTTPException(status_code=400, detail="Source language cannot be empty.")
+    if target_language is not None and not target_language:
+        raise HTTPException(status_code=400, detail="Target language cannot be empty.")
+
+    try:
+        job = job_manager.update_job_metadata(
+            job_id,
+            file_name=file_name,
+            source_language=source_language,
+            target_language=target_language,
+        )
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found.")
+    return {"job": job.to_dict()}
+
+
+@app.delete("/api/jobs/{job_id}")
+def delete_job(job_id: str) -> dict:
+    try:
+        deleted = job_manager.delete_job(job_id)
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Job not found.")
+    return {"ok": True}
 
 
 @app.post("/api/jobs")
@@ -155,3 +204,16 @@ def download_artifact(job_id: str, artifact: str):
         media_type = "text/csv; charset=utf-8"
 
     return FileResponse(path, media_type=media_type, filename=path.name)
+
+
+@app.delete("/api/jobs/{job_id}/artifacts/{artifact}")
+def delete_artifact(job_id: str, artifact: str) -> dict:
+    try:
+        job = job_manager.delete_artifact(job_id, artifact)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except RuntimeError as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+    if not job:
+        raise HTTPException(status_code=404, detail="Job not found.")
+    return {"job": job.to_dict()}

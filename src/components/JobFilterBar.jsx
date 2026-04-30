@@ -7,9 +7,10 @@ function JobFilterBar({ activeFilter, onFilterChange }) {
     <Card className="panel">
       <Card.Body className="d-flex flex-wrap align-items-center justify-content-between gap-3">
         <h2 className="mb-0">Filter Jobs</h2>
-        <ButtonGroup aria-label="job-filters">
+        <ButtonGroup aria-label="Filter translation jobs">
           {FILTERS.map((filter) => (
             <Button
+              type="button"
               key={filter}
               variant={filter === activeFilter ? 'dark' : 'outline-dark'}
               onClick={() => onFilterChange(filter)}

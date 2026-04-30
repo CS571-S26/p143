@@ -21,18 +21,23 @@ const workflowSteps = [
 
 function WorkflowGrid() {
   return (
-    <Row className="g-4 mt-1">
-      {workflowSteps.map((step) => (
-        <Col key={step.title} md={6}>
-          <Card className="panel h-100">
-            <Card.Body>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </Card.Body>
-          </Card>
-        </Col>
-      ))}
-    </Row>
+    <section aria-labelledby="workflow-heading" className="mt-1">
+      <h2 id="workflow-heading" className="section-title">
+        Translation Workflow
+      </h2>
+      <Row className="g-4">
+        {workflowSteps.map((step) => (
+          <Col key={step.title} md={6}>
+            <Card className="panel h-100">
+              <Card.Body>
+                <h3>{step.title}</h3>
+                <p>{step.text}</p>
+              </Card.Body>
+            </Card>
+          </Col>
+        ))}
+      </Row>
+    </section>
   )
 }
 

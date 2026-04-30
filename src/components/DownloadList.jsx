@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Alert, Button, Card, Form } from 'react-bootstrap'
 
-function DownloadList({ completedJobs, apiBaseUrl }) {
+function DownloadList({ completedJobs, apiBaseUrl, onArtifactDelete, onJobDelete }) {
   const [query, setQuery] = useState('')
   const [notice, setNotice] = useState('')
 
@@ -34,16 +34,18 @@ function DownloadList({ completedJobs, apiBaseUrl }) {
             <h2 className="mb-1">Downloads</h2>
             <p className="muted-note mb-0">Search completed jobs and prepare outputs.</p>
           </div>
-          <Form.Control
-            style={{ maxWidth: 300 }}
-            value={query}
-            onChange={(event) => setQuery(event.target.value)}
-            placeholder="Search by file name"
-          />
+          <Form.Group controlId="downloadSearch" className="download-search">
+            <Form.Label>Search completed jobs</Form.Label>
+            <Form.Control
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search by file name"
+            />
+          </Form.Group>
         </div>
 
         {notice && (
-          <Alert variant="success" className="mt-3 mb-0">
+          <Alert variant="success" className="mt-3 mb-0" aria-live="polite">
             {notice}
           </Alert>
         )}
@@ -60,19 +62,41 @@ function DownloadList({ completedJobs, apiBaseUrl }) {
                     {job.sourceLanguage} {'->'} {job.targetLanguage} via {job.provider}
                   </p>
                 </div>
-                <div className="d-flex flex-wrap gap-2">
-                  {artifacts
-                    .filter((artifact) => job.downloads?.[artifact.key])
-                    .map((artifact) => (
-                      <Button
-                        key={artifact.key}
-                        size="sm"
-                        variant="outline-dark"
-                        onClick={() => handleDownload(job, artifact.key, artifact.type)}
-                      >
-                        {artifact.label}
-                      </Button>
-                    ))}
+                <div className="download-actions">
+                  {artifacts.filter((artifact) => job.downloads?.[artifact.key]).length === 0 ? (
+                    <p className="muted-note mb-0">No generated files remain.</p>
+                  ) : (
+                    artifacts
+                      .filter((artifact) => job.downloads?.[artifact.key])
+                      .map((artifact) => (
+                        <div key={artifact.key} className="artifact-actions">
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline-dark"
+                            onClick={() => handleDownload(job, artifact.key, artifact.type)}
+                          >
+                            {artifact.label}
+                          </Button>
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="outline-danger"
+                            onClick={() => onArtifactDelete(job, artifact.key, artifact.label)}
+                          >
+                            Remove
+                          </Button>
+                        </div>
+                      ))
+                  )}
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="danger"
+                    onClick={() => onJobDelete(job)}
+                  >
+                    Remove Job
+                  </Button>
                 </div>
               </div>
             ))}

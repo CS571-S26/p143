@@ -59,6 +59,7 @@ Users can upload source files (`PDF`/`TXT`, up to 10 MB), extract text with OCR 
   3. Translation via OpenAI / DeepSeek / Gemini APIs
   4. Asynchronous job tracking (`Queued`, `Running`, `Completed`, `Failed`)
   5. Download generated `dual` PDF, `mono` PDF, source text, translated text, and glossary CSV (optional)
+  6. Manually edit completed/failed job metadata and remove unwanted jobs or generated files
 
 ## Run Locally
 

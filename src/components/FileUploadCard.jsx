@@ -12,9 +12,10 @@ function FileUploadCard({ selectedFile, onFileSelect, onFileClear }) {
     <Card className="panel h-100">
       <Card.Body>
         <h2>Upload Source File</h2>
-        <p className="muted-note">Accepted: PDF / TXT (max 10 MB)</p>
         <Form.Group controlId="sourceFile" className="mt-3">
+          <Form.Label>Source document</Form.Label>
           <Form.Control type="file" accept=".pdf,.txt" onChange={handleFileInput} />
+          <Form.Text className="muted-note">Accepted: PDF / TXT (max 10 MB)</Form.Text>
         </Form.Group>
         {selectedFile ? (
           <div className="file-preview mt-3">
@@ -25,7 +26,13 @@ function FileUploadCard({ selectedFile, onFileSelect, onFileClear }) {
               </div>
               <Badge bg="success">Ready</Badge>
             </div>
-            <Button className="mt-3" variant="outline-secondary" size="sm" onClick={onFileClear}>
+            <Button
+              type="button"
+              className="mt-3"
+              variant="outline-secondary"
+              size="sm"
+              onClick={onFileClear}
+            >
               Remove File
             </Button>
           </div>

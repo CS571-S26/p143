@@ -147,6 +147,81 @@ function App() {
     }
   }
 
+  const parseApiError = async (response, fallback) => {
+    try {
+      const payload = await response.json()
+      return payload.detail || fallback
+    } catch {
+      return fallback
+    }
+  }
+
+  const onJobUpdate = async (jobId, updates) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/jobs/${encodeURIComponent(jobId)}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updates),
+      })
+      if (!response.ok) {
+        throw new Error(await parseApiError(response, 'Unable to update job.'))
+      }
+      const payload = await response.json()
+      setJobs((previous) =>
+        previous.map((job) => (job.id === jobId ? payload.job : job)),
+      )
+      setNotice({ variant: 'success', text: 'Job details updated.' })
+      return true
+    } catch (error) {
+      setNotice({ variant: 'danger', text: error.message || 'Failed to update job.' })
+      return false
+    }
+  }
+
+  const onJobDelete = async (job) => {
+    if (!window.confirm(`Remove "${job.fileName}" and all of its generated files?`)) {
+      return false
+    }
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/jobs/${encodeURIComponent(job.id)}`, {
+        method: 'DELETE',
+      })
+      if (!response.ok) {
+        throw new Error(await parseApiError(response, 'Unable to delete job.'))
+      }
+      setJobs((previous) => previous.filter((item) => item.id !== job.id))
+      setNotice({ variant: 'success', text: `Removed ${job.fileName}.` })
+      return true
+    } catch (error) {
+      setNotice({ variant: 'danger', text: error.message || 'Failed to delete job.' })
+      return false
+    }
+  }
+
+  const onArtifactDelete = async (job, artifact, label) => {
+    if (!window.confirm(`Remove ${label} for "${job.fileName}"?`)) {
+      return false
+    }
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/jobs/${encodeURIComponent(job.id)}/artifacts/${artifact}`,
+        { method: 'DELETE' },
+      )
+      if (!response.ok) {
+        throw new Error(await parseApiError(response, 'Unable to remove file.'))
+      }
+      const payload = await response.json()
+      setJobs((previous) =>
+        previous.map((item) => (item.id === job.id ? payload.job : item)),
+      )
+      setNotice({ variant: 'success', text: `Removed ${label} for ${job.fileName}.` })
+      return true
+    } catch (error) {
+      setNotice({ variant: 'danger', text: error.message || 'Failed to remove file.' })
+      return false
+    }
+  }
+
   return (
     <HashRouter>
       <div className="app-shell">
@@ -159,6 +234,7 @@ function App() {
                 dismissible
                 onClose={() => setNotice(null)}
                 className="mb-4"
+                aria-live="polite"
               >
                 {notice.text}
               </Alert>
@@ -187,13 +263,20 @@ function App() {
                     jobs={jobs}
                     activeFilter={activeFilter}
                     onFilterChange={setActiveFilter}
+                    onJobUpdate={onJobUpdate}
+                    onJobDelete={onJobDelete}
                   />
                 }
               />
               <Route
                 path="/downloads"
                 element={
-                  <DownloadsPage completedJobs={completedJobs} apiBaseUrl={API_BASE_URL} />
+                  <DownloadsPage
+                    completedJobs={completedJobs}
+                    apiBaseUrl={API_BASE_URL}
+                    onArtifactDelete={onArtifactDelete}
+                    onJobDelete={onJobDelete}
+                  />
                 }
               />
               <Route path="*" element={<Navigate to="/" replace />} />
