@@ -9,7 +9,6 @@ services:
     region: oregon
     autoDeployTrigger: commit
     healthCheckPath: /api/health
-    maxShutdownDelaySeconds: 300
     disk:
       name: ai-translation-storage
       mountPath: /data
