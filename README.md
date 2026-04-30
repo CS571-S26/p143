@@ -83,6 +83,11 @@ If needed, set frontend API base URL:
 VITE_API_BASE_URL=http://localhost:8000
 ```
 
+## Deployed App
+
+- Frontend: `https://cs571-s26.github.io/p143/#/`
+- Backend: `https://ai-translation-backend-5e2b.onrender.com`
+
 ## Backend Deployment
 
 The backend is prepared for Render deployment with:
@@ -97,7 +102,7 @@ On Render, create the backend from the Blueprint or Docker web service config,
 then set:
 
 ```text
-CORS_ALLOW_ORIGINS=https://<your-github-username>.github.io
+CORS_ALLOW_ORIGINS=https://cs571-s26.github.io
 ```
 
 After Render provides the backend URL, update the frontend deployment variable:

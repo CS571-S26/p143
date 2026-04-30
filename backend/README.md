@@ -50,7 +50,7 @@ Render service settings:
 Required Render environment variable:
 
 ```text
-CORS_ALLOW_ORIGINS=https://<your-github-username>.github.io
+CORS_ALLOW_ORIGINS=https://cs571-s26.github.io
 ```
 
 Use the exact GitHub Pages origin that hosts the frontend. If your frontend is
@@ -69,6 +69,12 @@ Current backend deployment:
 
 ```text
 https://ai-translation-backend-5e2b.onrender.com
+```
+
+Current frontend deployment:
+
+```text
+https://cs571-s26.github.io/p143/#/
 ```
 
 ## API Endpoints
