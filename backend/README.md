@@ -65,6 +65,12 @@ VITE_API_BASE_URL=https://<your-render-service>.onrender.com
 
 Then rebuild and redeploy the frontend.
 
+Current backend deployment:
+
+```text
+https://ai-translation-backend-5e2b.onrender.com
+```
+
 ## API Endpoints
 
 - `GET /api/health`

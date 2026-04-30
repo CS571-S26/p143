@@ -27,6 +27,8 @@ jobs:
         run: npm ci
 
       - name: Build
+        env:
+          VITE_API_BASE_URL: https://ai-translation-backend-5e2b.onrender.com
         run: npm run build
 
       - name: Deploy

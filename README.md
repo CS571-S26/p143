@@ -106,6 +106,12 @@ After Render provides the backend URL, update the frontend deployment variable:
 VITE_API_BASE_URL=https://<your-render-service>.onrender.com
 ```
 
+Current backend deployment:
+
+```text
+https://ai-translation-backend-5e2b.onrender.com
+```
+
 ## Notes
 
 - Users are responsible for their own API usage costs.
